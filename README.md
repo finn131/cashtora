@@ -2,6 +2,15 @@
 
 POS (Point of Sale) cashier + inventory management untuk toko/kasir. Full-stack app: React frontend + Express/PostgreSQL backend. Tanpa fitur AI.
 
+## 🚀 Live Demo
+
+Coba langsung di: **https://cashtora-demo.vercel.app**
+
+- **Username:** admin
+- **Password:** admin123
+
+> **PENTING:** Kredensial default bersifat publik — ganti password segera setelah login (lihat **Kredensial Seed Default**).
+
 ## Fitur Utama
 
 - **Autentikasi** — login JWT + bcrypt, role-based access (admin/cashier).
