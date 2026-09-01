@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "cd server && node src/index.js & cd client && npm run dev",
+    "dev": "cd client/server && node src/index.js & cd client && npm run dev",
     "build": "cd client && npm run build",
-    "start": "cd server && node src/index.js",
-    "test": "cd server && npm test",
-    "lint": "echo 'No linter configured. Run: cd server && npm test'"
+    "start": "cd client/server && node src/index.js",
+    "test": "cd client/server && npm test",
+    "lint": "echo 'No linter configured. Run: cd client/server && npm test'"
   }
 }

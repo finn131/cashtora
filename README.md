@@ -1,6 +1,6 @@
 # Cashtora — POS & Manajemen Inventori (tanpa AI)
 
-POS (Point of Sale) cashier + inventory management untuk toko/kasir. Full-stack app: React frontend + Express/SQLite backend. Tanpa fitur AI.
+POS (Point of Sale) cashier + inventory management untuk toko/kasir. Full-stack app: React frontend + Express/PostgreSQL backend. Tanpa fitur AI.
 
 ## Fitur Utama
 
@@ -25,8 +25,8 @@ POS (Point of Sale) cashier + inventory management untuk toko/kasir. Full-stack 
 ### 1. Install dependencies
 
 ```bash
-cd server && npm install
-cd ../client && npm install
+cd client/server && npm install
+cd client && npm install
 ```
 
 ### 2. Mode develop (dari folder root)
@@ -41,7 +41,7 @@ Atau manual, dua terminal terpisah:
 
 ```bash
 # Terminal 1 — backend
-cd server && node --watch src/index.js
+cd client/server && node --watch src/index.js
 
 # Terminal 2 — frontend
 cd client && npm run dev
@@ -82,6 +82,7 @@ Login awal:
 
 - `DATABASE_URL` — connection string PostgreSQL/Supabase (wajib di produksi).
 - `JWT_SECRET` — wajib di produksi. Backend menolak start dengan fallback insecure secret saat `NODE_ENV=production`.
+- `CORS_ORIGIN` — origin yang boleh akses API (opsional, default `http://localhost:5173`).
 
 Buat secret kuat:
 
@@ -89,22 +90,35 @@ Buat secret kuat:
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
+## Deploy ke Vercel
+
+Project Vercel di-link ke repo ini dengan **Root Directory = `client`**, jadi backend ikut ter-deploy sebagai serverless function:
+
+```text
+client/
+  api/index.js       # Vercel serverless entry (re-export Express app)
+  vercel.json        # Rewrites: /api/* → fungsi, sisanya → SPA
+  server/            # Backend Express (di bawah rootDirectory client)
+```
+
+Env vars wajib di-set saat deploy: `DATABASE_URL`, `JWT_SECRET`.
+
 ## Struktur Folder
 
 ```
-cashier-inventory/
-  client/              # Frontend React + Vite (SPA, port 5173)
+cashtora/
+  client/              # Frontend React + Vite + backend (rootDirectory Vercel)
     api/index.js       # Vercel serverless entry (re-export Express app)
-    vercel.json        # SPA rewrites untuk Vercel
-  server/              # Backend Express API (port 3000)
-    src/
-      index.js         # Entry point
-      app.js           # Express app
-      db.js            # pg Pool + transaction helper
-      routes/          # auth, products, stock, sales, suppliers, purchase-orders, reports
-      middleware/      # JWT auth guard
-      utils/           # jwt, validate
-    test/api.test.mjs  # 21 integration test
+    vercel.json        # Rewrites SPA + API untuk Vercel
+    server/            # Backend Express API (port 3000)
+      src/
+        index.js       # Entry point
+        app.js         # Express app
+        db.js          # pg Pool + transaction helper
+        routes/        # auth, products, stock, sales, suppliers, purchase-orders, reports
+        middleware/    # JWT auth guard
+        utils/         # jwt, validate
+      test/api.test.mjs  # 21 integration test
   package.json         # Root scripts
 ```
 
